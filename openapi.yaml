@@ -1,0 +1,702 @@
+openapi: 3.0.0
+info:
+  title: API de Conversão de Moedas do Mercado de Wefin
+  description: API para gerenciamento de taxas de câmbio e conversão entre Ouro Real e Tibar.
+  version: 1.0.0
+
+servers:
+  - url: https://localhost:8080/api
+
+security:
+  - OAuth2:
+      - read
+      - write
+
+paths:
+  /oauth/token:
+    post:
+      summary: Autenticação do usuário
+      description: Endpoint para autenticação OAuth2 e obtenção do token JWT.
+      tags:
+        - Autenticação
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  default: "password"
+                username:
+                  type: string
+                password:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - username
+                - password
+                - client_id
+                - client_secret
+      responses:
+        '200':
+          description: Token gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /coins:
+    post:
+      summary: Criar um nova moeda
+      description: Cria um nova moeda na base de dados
+      operationId: createCoin
+      tags:
+        - Moedas
+      security:
+        - OAuth2:
+            - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoinRequest'
+      responses:
+        '201':
+          description: Moeda inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Buscar as moedas
+      description: Lista as moedas baseadas nos filtros informados
+      operationId: searchCoins
+      tags:
+        - Moedas
+      security:
+        - OAuth2:
+            - read
+      responses:
+        '200':
+          description: Lista de moedas retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoinResponse'
+        '500':
+          description: Erro interno ao listar moedas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /coins/{uuid}:
+    get:
+      summary: Buscar uma moeda
+      description: Busca uma moeda pelo ID informado
+      operationId: findCoinById
+      tags:
+        - Moedas
+      security:
+        - OAuth2:
+            - read
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da moeda
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Moeda encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinResponse'
+        '404':
+          description: Moeda não encontrada
+        '500':
+          description: Erro interno ao listar moedas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Atualizar uma moeda
+      description: Atualiza todos os dados de uma moeda pelo ID
+      operationId: updateCoin
+      tags:
+        - Moedas
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da moeda
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CoinRequest'
+      responses:
+        '201':
+          description: Moeda atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Moeda não encontrada
+
+    delete:
+      summary: Remover uma moeda
+      description: Remove uma moeda pelo ID informado
+      operationId: removeCoin
+      tags:
+        - Moedas
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da moeda
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Moeda inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoinResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products:
+    post:
+      summary: Criar um novo produto
+      description: Cria um novo produto na base de dados
+      operationId: createProduct
+      tags:
+        - Produtos
+      security:
+        - OAuth2:
+            - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        '201':
+          description: Produto inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Buscar os os produtos
+      description: Lista os produtos baseado nos filtros informados
+      operationId: searchProducts
+      tags:
+        - Produtos
+      security:
+        - OAuth2:
+            - read
+      responses:
+        '200':
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+        '500':
+          description: Erro interno ao listar produtos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products/{uuid}:
+    get:
+      summary: Buscar um produto
+      description: Busca um produto pelo ID informado
+      operationId: findProductById
+      tags:
+        - Produtos
+      security:
+        - OAuth2:
+            - read
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do produto
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '404':
+          description: Produto não encontrado
+        '500':
+          description: Erro interno ao listar produtos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Atualizar um produto
+      description: Atualiza todos os dados de um produto pelo ID
+      operationId: updateProduct
+      tags:
+        - Produtos
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do produto
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        '201':
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Produto não encontrado
+
+    delete:
+      summary: Remover um produto
+      description: Remove um produto pelo ID informado
+      operationId: removeProduct
+      tags:
+        - Produtos
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do produto
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Produto inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /kingdoms:
+    post:
+      summary: Criar um novo reino
+      description: Cria um novo reino na base de dados
+      operationId: createKingdom
+      tags:
+        - Reinos
+      security:
+        - OAuth2:
+            - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KingdomRequest'
+      responses:
+        '201':
+          description: Reino inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KingdomResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Buscar os reinos
+      description: Lista os reinos baseado nos filtros informados
+      operationId: searchKingdoms
+      tags:
+        - Reinos
+      security:
+        - OAuth2:
+            - read
+      responses:
+        '200':
+          description: Lista de reinos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KingdomResponse'
+        '500':
+          description: Erro interno ao listar reinos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /kingdoms/{uuid}:
+    get:
+      summary: Buscar um reino
+      description: Busca um reino pelo ID informado
+      operationId: findKingdomById
+      tags:
+        - Reinos
+      security:
+        - OAuth2:
+            - read
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do reino
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Reino encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KingdomResponse'
+        '404':
+          description: Reino não encontrado
+        '500':
+          description: Erro interno ao listar reinos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Atualizar um reino
+      description: Atualiza todos os dados de um reino pelo ID
+      operationId: updateKingdom
+      tags:
+        - Reinos
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do reino
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KingdomRequest'
+      responses:
+        '201':
+          description: Reino atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KingdomResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Reino não encontrado
+
+    delete:
+      summary: Remover um reino
+      description: Remove um reino pelo ID informado
+      operationId: removeKingdom
+      tags:
+        - Reinos
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID do reino
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Reino inserido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KingdomResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CoinRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome da moeda
+      required:
+        - name
+
+    KingdomRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome do reino
+      required:
+        - name
+
+    ProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome do produto
+        vlUnit:
+          type: number
+          minimum: 0.01
+        idKingdom:
+          type: string
+          format: uuid
+          description: ID do reino do produto
+        idCoinBase:
+          type: string
+          format: uuid
+          description: ID da moeda base do produto
+      required:
+        - name
+        - vlUnit
+        - idKingdom
+        - idCoinBase
+
+    CoinResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID da moeda
+        name:
+          type: string
+          description: Nome da moeda
+
+    KingdomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID do reino
+        name:
+          type: string
+          description: Nome do reino
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID do produto
+        name:
+          type: string
+          description: Nome do produto
+        vlUnit:
+          type: number
+          minimum: 0.01
+        kingdom:
+          $ref: '#/components/schemas/KingdomResponse'
+        coinBase:
+          $ref: '#/components/schemas/CoinResponse'
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        fields:
+          type: array
+          items:
+            type: string
+
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8080/realms/your-realm/protocol/openid-connect/auth
+          tokenUrl: http://localhost:8080/realms/your-realm/protocol/openid-connect/token
+          scopes:
+            read: Permissão para consultas (GET)
+            write: Permissão para operações de escrita (POST/PUT/DELETE)
