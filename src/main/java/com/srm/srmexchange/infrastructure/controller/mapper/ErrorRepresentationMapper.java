@@ -1,8 +1,8 @@
 package com.srm.srmexchange.infrastructure.controller.mapper;
 
+import com.srm.representation.ErrorResponseRepresentation;
 import com.srm.srmexchange.domain.constants.ErrorCodeEnum;
 import com.srm.srmexchange.domain.exception.BusinessException;
-import com.srm.representation.ErrorResponseRepresentation;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

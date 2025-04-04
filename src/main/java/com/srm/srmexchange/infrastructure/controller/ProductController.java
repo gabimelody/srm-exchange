@@ -69,8 +69,9 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<ProductResponseRepresentation> updateProduct(UUID uuid, ProductRequestRepresentation productRequestRepresentation) {
         log.info("Received request to update product: {}", productRequestRepresentation);
         ProductInbound inbound = productRepresentationMapper.toInbound(productRequestRepresentation);
-        ProductOutbound outbound = updateProductPort.execute(uuid, inbound);
-        ProductResponseRepresentation representation = productRepresentationMapper.toRepresentation(outbound);
+        ProductResponseRepresentation representation = Optional.ofNullable(updateProductPort.execute(uuid, inbound))
+                .map(productRepresentationMapper::toRepresentation)
+                .orElseThrow(ResourceNotFoundException::new);
 
         log.info("Returning response of updated product: {}", representation);
         return ResponseEntity.ok(representation);

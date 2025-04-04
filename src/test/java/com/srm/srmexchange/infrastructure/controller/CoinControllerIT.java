@@ -126,7 +126,7 @@ class CoinControllerIT {
                 .andExpect(jsonPath("$.description").value(ErrorCodeEnum.GEN001.getDescription()));
     }
 
-    static ResultActions createCoin(
+    public static ResultActions createCoin(
             MockMvc mockMvc,
             CoinRequestRepresentation coinRequestRepresentation
     ) throws Exception {

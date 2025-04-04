@@ -1,8 +1,8 @@
 package com.srm.srmexchange.infrastructure.repository.adapter.coin;
 
-import com.srm.srmexchange.domain.domain.ProductEntity;
-import com.srm.srmexchange.infrastructure.repository.ProductRepository;
-import com.srm.srmexchange.infrastructure.repository.adapter.product.FindAllProductAdapter;
+import com.srm.srmexchange.domain.domain.CoinEntity;
+import com.srm.srmexchange.infrastructure.repository.CoinRepository;
+import com.srm.srmexchange.infrastructure.repository.adapter.coin.FindAllCoinAdapter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,27 +16,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-public class FindAllProductAdapterTest {
+public class FindAllCoinAdapterTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private CoinRepository coinRepository;
 
     @InjectMocks
-    private FindAllProductAdapter findAllProductAdapter;
+    private FindAllCoinAdapter findAllCoinAdapter;
 
     @Test
-    @DisplayName("Execute should find all products")
+    @DisplayName("Execute should find all coins")
     void execute_shouldFindAll() {
         // Given
-        List<ProductEntity> listOfEntity = List.of(ProductEntity.builder()
+        List<CoinEntity> listOfEntity = List.of(CoinEntity.builder()
                 .name("test")
                 .build());
 
         // When
-        when(productRepository.findAll()).thenReturn(listOfEntity);
+        when(coinRepository.findAll()).thenReturn(listOfEntity);
 
         // Then
-        assertEquals(listOfEntity, findAllProductAdapter.execute());
+        assertEquals(listOfEntity, findAllCoinAdapter.execute());
     }
 
 }

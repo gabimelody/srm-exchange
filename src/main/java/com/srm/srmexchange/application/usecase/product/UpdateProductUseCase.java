@@ -3,8 +3,14 @@ package com.srm.srmexchange.application.usecase.product;
 import com.srm.srmexchange.application.dto.product.ProductInbound;
 import com.srm.srmexchange.application.dto.product.ProductOutbound;
 import com.srm.srmexchange.application.mapper.ProductEntityMapper;
+import com.srm.srmexchange.domain.domain.CoinEntity;
+import com.srm.srmexchange.domain.domain.KingdomEntity;
 import com.srm.srmexchange.domain.domain.ProductEntity;
+import com.srm.srmexchange.domain.exception.CoinNotFoundException;
+import com.srm.srmexchange.domain.exception.KingdomNotFoundException;
 import com.srm.srmexchange.domain.port.in.product.UpdateProductPort;
+import com.srm.srmexchange.domain.port.out.coin.FindByIdCoinPort;
+import com.srm.srmexchange.domain.port.out.kingdom.FindByIdKingdomPort;
 import com.srm.srmexchange.domain.port.out.product.FindByIdProductPort;
 import com.srm.srmexchange.domain.port.out.product.SaveProductPort;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +28,8 @@ import java.util.UUID;
 public class UpdateProductUseCase implements UpdateProductPort {
 
     private final SaveProductPort saveProductPort;
+    private final FindByIdCoinPort findByIdCoinPort;
+    private final FindByIdKingdomPort findByIdKingdomPort;
     private final FindByIdProductPort findByIdProductPort;
     private final ProductEntityMapper productEntityMapper;
 
@@ -39,7 +47,20 @@ public class UpdateProductUseCase implements UpdateProductPort {
     private ProductEntity convert(ProductEntity productEntity, ProductInbound inbound) {
         log.info("Previous product: {}", productEntity);
         productEntity.setName(inbound.getName());
+        productEntity.setCoinBase(findCoinById(inbound.getIdCoinBase()));
+        productEntity.setKingdom(findKingdomById(inbound.getIdKingdom()));
+
         return productEntity;
+    }
+
+    private CoinEntity findCoinById(UUID idCoinBase) {
+        return findByIdCoinPort.execute(idCoinBase)
+                .orElseThrow(CoinNotFoundException::new);
+    }
+
+    private KingdomEntity findKingdomById(UUID idKingdom) {
+        return findByIdKingdomPort.execute(idKingdom)
+                .orElseThrow(KingdomNotFoundException::new);
     }
 
 }

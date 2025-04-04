@@ -1,8 +1,8 @@
 package com.srm.srmexchange.infrastructure.repository.adapter.coin;
 
-import com.srm.srmexchange.domain.domain.ProductEntity;
-import com.srm.srmexchange.infrastructure.repository.ProductRepository;
-import com.srm.srmexchange.infrastructure.repository.adapter.product.FindByIdProductAdapter;
+import com.srm.srmexchange.domain.domain.CoinEntity;
+import com.srm.srmexchange.infrastructure.repository.CoinRepository;
+import com.srm.srmexchange.infrastructure.repository.adapter.coin.FindByIdCoinAdapter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,28 +17,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-public class FindByIdProductAdapterTest {
+public class FindByIdCoinAdapterTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private CoinRepository coinRepository;
 
     @InjectMocks
-    private FindByIdProductAdapter findByIdProductAdapter;
+    private FindByIdCoinAdapter findByIdCoinAdapter;
 
     @Test
-    @DisplayName("Execute should find product by id")
+    @DisplayName("Execute should find coin by id")
     void execute_shouldFindById() {
         // Given
         UUID uuid = UUID.randomUUID();
-        Optional<ProductEntity> optionalEntity = Optional.of(ProductEntity.builder()
+        Optional<CoinEntity> optionalEntity = Optional.of(CoinEntity.builder()
                 .name("test")
                 .build());
 
         // When
-        when(productRepository.findById(uuid)).thenReturn(optionalEntity);
+        when(coinRepository.findById(uuid)).thenReturn(optionalEntity);
 
         // Then
-        assertEquals(optionalEntity, findByIdProductAdapter.execute(uuid));
+        assertEquals(optionalEntity, findByIdCoinAdapter.execute(uuid));
     }
 
 }
