@@ -1,7 +1,6 @@
 package com.srm.srmexchange.infrastructure.controller;
 
-import com.srm.representation.ProductRequestRepresentation;
-import com.srm.representation.ProductResponseRepresentation;
+import com.srm.representation.*;
 import com.srm.srmexchange.domain.constants.ErrorCodeEnum;
 import com.srm.srmexchange.infrastructure.controller.util.IntegrationTestUtil;
 import org.junit.jupiter.api.*;
@@ -16,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.not;
@@ -33,6 +33,9 @@ class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    private static ProductRequestRepresentation productRequestRepresentation1;
+    private static ProductRequestRepresentation productRequestRepresentation2;
+
     private static ProductResponseRepresentation productResponseRepresentation1;
     private static ProductResponseRepresentation productResponseRepresentation2;
 
@@ -41,8 +44,14 @@ class ProductControllerIT {
     @DisplayName("When create product in path /products should return created")
     void createProduct_shouldReturnCreated() throws Exception {
         // Given
-        ProductRequestRepresentation productRequestRepresentation1 = new ProductRequestRepresentation("test");
-        ProductRequestRepresentation productRequestRepresentation2 = new ProductRequestRepresentation("test2");
+        UUID idKingdom = getIdKingdom();
+        UUID idCoinBase = getIdCoinBase();
+
+        productRequestRepresentation1 = new ProductRequestRepresentation(
+                "test", BigDecimal.ONE, idKingdom, idCoinBase);
+
+        productRequestRepresentation2 = new ProductRequestRepresentation(
+                "test2", BigDecimal.ONE, idKingdom, idCoinBase);
 
         // Then
         productResponseRepresentation1 = IntegrationTestUtil.getMapper().readValue(
@@ -94,14 +103,14 @@ class ProductControllerIT {
     @DisplayName("When update product in path /products should return ok")
     void updateProduct_shouldReturnOk() throws Exception {
         // Given
-        ProductRequestRepresentation productRequestRepresentation = new ProductRequestRepresentation("testNovo");
+        productRequestRepresentation1.setName("testNovo");
 
         // Then
         productResponseRepresentation1 = IntegrationTestUtil.getMapper().readValue(
-                updateProduct(mockMvc, productResponseRepresentation1.getId(), productRequestRepresentation)
+                updateProduct(mockMvc, productResponseRepresentation1.getId(), productRequestRepresentation1)
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.id").exists())
-                        .andExpect(jsonPath("$.name").value(productRequestRepresentation.getName()))
+                        .andExpect(jsonPath("$.name").value(productRequestRepresentation1.getName()))
                         .andReturn().getResponse().getContentAsString()
                 , ProductResponseRepresentation.class);
     }
@@ -124,6 +133,20 @@ class ProductControllerIT {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value(ErrorCodeEnum.GEN001.name()))
                 .andExpect(jsonPath("$.description").value(ErrorCodeEnum.GEN001.getDescription()));
+    }
+
+    UUID getIdKingdom() throws Exception {
+        return IntegrationTestUtil.getMapper().readValue(
+                KingdomControllerIT.createKingdom(mockMvc, new KingdomRequestRepresentation("test"))
+                        .andReturn().getResponse().getContentAsString()
+                , KingdomResponseRepresentation.class).getId();
+    }
+
+    UUID getIdCoinBase() throws Exception {
+        return IntegrationTestUtil.getMapper().readValue(
+                CoinControllerIT.createCoin(mockMvc, new CoinRequestRepresentation("test"))
+                        .andReturn().getResponse().getContentAsString()
+                , CoinResponseRepresentation.class).getId();
     }
 
     static ResultActions createProduct(

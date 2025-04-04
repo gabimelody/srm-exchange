@@ -3,6 +3,7 @@ package com.srm.srmexchange.infrastructure.controller.exception;
 import com.srm.representation.ErrorResponseRepresentation;
 import com.srm.srmexchange.domain.constants.ErrorCodeEnum;
 import com.srm.srmexchange.domain.exception.BusinessException;
+import com.srm.srmexchange.domain.exception.KingdomNotFoundException;
 import com.srm.srmexchange.domain.exception.ResourceNotFoundException;
 import com.srm.srmexchange.infrastructure.controller.mapper.ErrorRepresentationMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ControlExceptionHandler {
 
     // Errors 4XX
     @ExceptionHandler({
-
+            KingdomNotFoundException.class,
     })
     public ResponseEntity<Object> handleBadRequest(BusinessException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

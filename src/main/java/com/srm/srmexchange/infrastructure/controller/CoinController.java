@@ -69,8 +69,9 @@ public class CoinController implements CoinsApi {
     public ResponseEntity<CoinResponseRepresentation> updateCoin(UUID uuid, CoinRequestRepresentation coinRequestRepresentation) {
         log.info("Received request to update coin: {}", coinRequestRepresentation);
         CoinInbound inbound = coinRepresentationMapper.toInbound(coinRequestRepresentation);
-        CoinOutbound outbound = updateCoinPort.execute(uuid, inbound);
-        CoinResponseRepresentation representation = coinRepresentationMapper.toRepresentation(outbound);
+        CoinResponseRepresentation representation = Optional.ofNullable(updateCoinPort.execute(uuid, inbound))
+                .map(coinRepresentationMapper::toRepresentation)
+                .orElseThrow(ResourceNotFoundException::new);
 
         log.info("Returning response of updated coin: {}", representation);
         return ResponseEntity.ok(representation);

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,8 +13,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "PRODUCT")
-public class ProductEntity {
+@Table(name = "KINGDOM")
+public class KingdomEntity {
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -24,16 +23,5 @@ public class ProductEntity {
 
     @Column(name = "NAME", nullable = false)
     private String name;
-
-    @Column(name = "VL_UNIT", nullable = false)
-    private BigDecimal vlUnit;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_COIN_BASE", referencedColumnName = "ID", nullable = false)
-    private CoinEntity coinBase;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_KINGDOM", referencedColumnName = "ID", nullable = false)
-    private KingdomEntity kingdom;
 
 }

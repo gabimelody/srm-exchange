@@ -1,8 +1,7 @@
 package com.srm.srmexchange.infrastructure.repository.adapter.coin;
 
-import com.srm.srmexchange.domain.domain.ProductEntity;
-import com.srm.srmexchange.infrastructure.repository.ProductRepository;
-import com.srm.srmexchange.infrastructure.repository.adapter.product.SaveProductAdapter;
+import com.srm.srmexchange.domain.domain.CoinEntity;
+import com.srm.srmexchange.infrastructure.repository.CoinRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,27 +13,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-public class SaveProductAdapterTest {
+public class SaveCoinAdapterTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private CoinRepository coinRepository;
 
     @InjectMocks
-    private SaveProductAdapter saveProductAdapter;
+    private SaveCoinAdapter saveCoinAdapter;
 
     @Test
-    @DisplayName("Execute should save the product")
+    @DisplayName("Execute should save the coin")
     void execute_shouldSave() {
         // Given
-        ProductEntity entity = ProductEntity.builder()
+        CoinEntity entity = CoinEntity.builder()
                 .name("test")
                 .build();
 
         // When
-        when(productRepository.save(entity)).thenReturn(entity);
+        when(coinRepository.save(entity)).thenReturn(entity);
 
         // Then
-        assertEquals(entity, saveProductAdapter.execute(entity));
+        assertEquals(entity, saveCoinAdapter.execute(entity));
     }
 
 }
