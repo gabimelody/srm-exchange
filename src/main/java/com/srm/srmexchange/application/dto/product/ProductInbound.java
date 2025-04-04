@@ -18,13 +18,13 @@ public class ProductInbound {
     @NotNull(message = "Product name is required")
     private String name;
 
-    @NotNull(message = "Unit value is required")
-    private BigDecimal vlUnit;
-
     @NotNull(message = "Kingdom id is required")
     private UUID idKingdom;
 
     @NotNull(message = "Coin base id is required")
     private UUID idCoinBase;
+
+    @NotNull(message = "Unit value is required")
+    private BigDecimal vlUnit;
 
 }

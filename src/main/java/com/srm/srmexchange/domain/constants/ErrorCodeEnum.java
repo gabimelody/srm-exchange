@@ -11,8 +11,15 @@ public enum ErrorCodeEnum {
     GEN002("Fields are required"),
     GEN003("The fields are invalid"),
 
-    PRO001("Coin informed does not exist"),
-    PRO002("Kingdom informed does not exist");
+    COI001("Coin informed does not exist"),
+
+    EXC001("The exchange rate informed already exists"),
+    EXC002("The coins informed are the same"),
+    EXC003("Exchange rate informed does not exist"),
+
+    KIN001("Kingdom informed does not exist"),
+
+    PRO001("Product informed does not exist");
 
     private final String description;
 

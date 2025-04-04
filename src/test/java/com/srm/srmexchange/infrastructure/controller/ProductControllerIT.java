@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({MockitoExtension.class})
 @DisplayName("ProductController Integration Test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerIT {
 
@@ -34,8 +36,6 @@ class ProductControllerIT {
     private MockMvc mockMvc;
 
     private static ProductRequestRepresentation productRequestRepresentation1;
-    private static ProductRequestRepresentation productRequestRepresentation2;
-
     private static ProductResponseRepresentation productResponseRepresentation1;
     private static ProductResponseRepresentation productResponseRepresentation2;
 
@@ -50,7 +50,7 @@ class ProductControllerIT {
         productRequestRepresentation1 = new ProductRequestRepresentation(
                 "test", BigDecimal.ONE, idKingdom, idCoinBase);
 
-        productRequestRepresentation2 = new ProductRequestRepresentation(
+        ProductRequestRepresentation productRequestRepresentation2 = new ProductRequestRepresentation(
                 "test2", BigDecimal.ONE, idKingdom, idCoinBase);
 
         // Then

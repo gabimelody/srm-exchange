@@ -78,7 +78,7 @@ public class CoinController implements CoinsApi {
     }
 
     @Override
-    public ResponseEntity<CoinResponseRepresentation> removeCoin(UUID uuid) {
+    public ResponseEntity<Void> removeCoin(UUID uuid) {
         log.info("Received request to remove coin uuid: {}", uuid);
         if (!removeCoinPort.execute(uuid)) {
             throw new ResourceNotFoundException();

@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
         CoinEntityMapper.class})
 public interface ProductEntityMapper {
 
-    ProductEntity toEntity(ProductInbound productInbound);
-    ProductOutbound toOutbound(ProductEntity productEntity);
+    ProductEntity toEntity(ProductInbound inbound);
+    ProductOutbound toOutbound(ProductEntity entity);
 
 }

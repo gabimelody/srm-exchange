@@ -6,10 +6,12 @@ import com.srm.srmexchange.application.dto.product.ProductInbound;
 import com.srm.srmexchange.application.dto.product.ProductOutbound;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {
+        CoinRepresentationMapper.class,
+        ExchangeRateRepresentationMapper.class})
 public interface ProductRepresentationMapper {
 
-    ProductResponseRepresentation toRepresentation(ProductOutbound productOutbound);
-    ProductInbound toInbound(ProductRequestRepresentation productRequestRepresentation);
+    ProductInbound toInbound(ProductRequestRepresentation representation);
+    ProductResponseRepresentation toRepresentation(ProductOutbound outbound);
 
 }

@@ -12,12 +12,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SaveProductAdapter implements SaveProductPort {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
     @Override
     public ProductEntity execute(ProductEntity entity) {
-        log.info("Creating product: {}", entity);
-        return productRepository.save(entity);
+        log.info("Creating entity: {}", entity);
+        entity = repository.save(entity);
+        log.info("Entity created: {}", entity);
+
+        return entity;
     }
 
 }

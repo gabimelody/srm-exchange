@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CoinEntityMapper {
 
-    CoinEntity toEntity(CoinInbound coinInbound);
-    CoinOutbound toOutbound(CoinEntity coinEntity);
+    CoinEntity toEntity(CoinInbound inbound);
+    CoinOutbound toOutbound(CoinEntity entity);
 
 }

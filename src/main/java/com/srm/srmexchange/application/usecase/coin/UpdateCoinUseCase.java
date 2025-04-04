@@ -36,10 +36,10 @@ public class UpdateCoinUseCase implements UpdateCoinPort {
                 .orElse(null);
     }
 
-    private CoinEntity convert(CoinEntity coinEntity, CoinInbound inbound) {
-        log.info("Previous coin: {}", coinEntity);
-        coinEntity.setName(inbound.getName());
-        return coinEntity;
+    private CoinEntity convert(CoinEntity entity, CoinInbound inbound) {
+        log.info("Previous coin: {}", entity);
+        entity.setName(inbound.getName());
+        return entity;
     }
 
 }

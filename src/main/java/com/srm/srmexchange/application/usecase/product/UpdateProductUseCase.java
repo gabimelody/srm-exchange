@@ -44,13 +44,13 @@ public class UpdateProductUseCase implements UpdateProductPort {
                 .orElse(null);
     }
 
-    private ProductEntity convert(ProductEntity productEntity, ProductInbound inbound) {
-        log.info("Previous product: {}", productEntity);
-        productEntity.setName(inbound.getName());
-        productEntity.setCoinBase(findCoinById(inbound.getIdCoinBase()));
-        productEntity.setKingdom(findKingdomById(inbound.getIdKingdom()));
+    private ProductEntity convert(ProductEntity entity, ProductInbound inbound) {
+        log.info("Previous product: {}", entity);
+        entity.setName(inbound.getName());
+        entity.setCoinBase(findCoinById(inbound.getIdCoinBase()));
+        entity.setKingdom(findKingdomById(inbound.getIdKingdom()));
 
-        return productEntity;
+        return entity;
     }
 
     private CoinEntity findCoinById(UUID idCoinBase) {

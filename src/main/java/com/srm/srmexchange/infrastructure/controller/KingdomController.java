@@ -78,7 +78,7 @@ public class KingdomController implements KingdomsApi {
     }
 
     @Override
-    public ResponseEntity<KingdomResponseRepresentation> removeKingdom(UUID uuid) {
+    public ResponseEntity<Void> removeKingdom(UUID uuid) {
         log.info("Received request to remove kingdom uuid: {}", uuid);
         if (!removeKingdomPort.execute(uuid)) {
             throw new ResourceNotFoundException();

@@ -12,12 +12,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SaveCoinAdapter implements SaveCoinPort {
 
-    private final CoinRepository coinRepository;
+    private final CoinRepository repository;
 
     @Override
     public CoinEntity execute(CoinEntity entity) {
-        log.info("Creating coin: {}", entity);
-        return coinRepository.save(entity);
+        log.info("Creating entity: {}", entity);
+        entity = repository.save(entity);
+        log.info("Entity created: {}", entity);
+
+        return entity;
     }
 
 }

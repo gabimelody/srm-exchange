@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeleteCoinAdapter implements DeleteCoinPort {
 
-    private final CoinRepository coinRepository;
+    private final CoinRepository repository;
 
     @Override
     public void execute(CoinEntity entity) {
-        log.info("Deleting coin: {}", entity);
-        coinRepository.delete(entity);
+        log.debug("Deleting entity: {}", entity);
+        repository.delete(entity);
+        log.debug("Entity deleted");
     }
 
 }

@@ -36,10 +36,10 @@ public class UpdateKingdomUseCase implements UpdateKingdomPort {
                 .orElse(null);
     }
 
-    private KingdomEntity convert(KingdomEntity kingdomEntity, KingdomInbound inbound) {
-        log.info("Previous kingdom: {}", kingdomEntity);
-        kingdomEntity.setName(inbound.getName());
-        return kingdomEntity;
+    private KingdomEntity convert(KingdomEntity entity, KingdomInbound inbound) {
+        log.info("Previous kingdom: {}", entity);
+        entity.setName(inbound.getName());
+        return entity;
     }
 
 }
