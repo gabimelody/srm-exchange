@@ -95,10 +95,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
     get:
       summary: Buscar as moedas
@@ -118,12 +114,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CoinResponse'
-        '500':
-          description: Erro interno ao listar moedas
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /coins/{uuid}:
     get:
@@ -151,13 +141,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CoinResponse'
         '404':
-          description: Moeda não encontrada
-        '500':
-          description: Erro interno ao listar moedas
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Recurso não encontrado
 
     put:
       summary: Atualizar uma moeda
@@ -183,8 +167,8 @@ paths:
             schema:
               $ref: '#/components/schemas/CoinRequest'
       responses:
-        '201':
-          description: Moeda atualizado com sucesso
+        '200':
+          description: Atualizado com sucesso
           content:
             application/json:
               schema:
@@ -197,12 +181,8 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Moeda não encontrada
+          description: Recurso não encontrado
 
     delete:
       summary: Remover uma moeda
@@ -222,12 +202,8 @@ paths:
             type: string
             format: uuid
       responses:
-        '201':
-          description: Moeda inserido com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CoinResponse'
+        '204':
+          description: Remoção feita com sucesso
         '400':
           description: Dados inválidos
           content:
@@ -236,10 +212,171 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
+        '404':
+          description: Recurso não encontrado
+
+  /exchange-rates:
+    post:
+      summary: Criar uma nova taxa de câmbio
+      description: Cria uma nova taxa de câmbio na base de dados
+      operationId: createExchangeRate
+      tags:
+        - Taxas de câmbio
+      security:
+        - OAuth2:
+            - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangeRateRequest'
+      responses:
+        '201':
+          description: Taxa de câmbio inserida com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRateResponse'
+        '400':
+          description: Dados inválidos
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+        '409':
+          description: A taxa de câmbio informada já existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Buscar as taxas de câmbio
+      description: Lista as taxas de câmbio baseadas nos filtros informados
+      operationId: searchExchangeRates
+      tags:
+        - Taxas de câmbio
+      security:
+        - OAuth2:
+            - read
+      responses:
+        '200':
+          description: Lista de taxas de câmbio retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExchangeRateResponse'
+
+  /exchange-rates/{uuid}:
+    get:
+      summary: Buscar uma taxa de câmbio
+      description: Busca uma taxa de câmbio pelo ID informado
+      operationId: findExchangeRateById
+      tags:
+        - Taxas de câmbio
+      security:
+        - OAuth2:
+            - read
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da taxa de câmbio
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Taxa de câmbio encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRateResponse'
+        '404':
+          description: Recurso não encontrado
+
+    put:
+      summary: Atualizar uma taxa de câmbio
+      description: Atualiza todos os dados de uma taxa de câmbio pelo ID
+      operationId: updateExchangeRate
+      tags:
+        - Taxas de câmbio
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da taxa de câmbio
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangeRateRequest'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRateResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+        '404':
+          description: Recurso não encontrado
+        '409':
+          description: A taxa de câmbio informada já existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Remover uma taxa de câmbio
+      description: Remove uma taxa de câmbio pelo ID informado
+      operationId: removeExchangeRate
+      tags:
+        - Taxas de câmbio
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da taxa de câmbio
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Remoção feita com sucesso
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+        '404':
+          description: Recurso não encontrado
 
   /products:
     post:
@@ -272,10 +409,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
     get:
       summary: Buscar os os produtos
@@ -295,12 +428,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductResponse'
-        '500':
-          description: Erro interno ao listar produtos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /products/{uuid}:
     get:
@@ -328,13 +455,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProductResponse'
         '404':
-          description: Produto não encontrado
-        '500':
-          description: Erro interno ao listar produtos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Recurso não encontrado
 
     put:
       summary: Atualizar um produto
@@ -360,8 +481,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductRequest'
       responses:
-        '201':
-          description: Produto atualizado com sucesso
+        '200':
+          description: Atualizado com sucesso
           content:
             application/json:
               schema:
@@ -374,12 +495,8 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Produto não encontrado
+          description: Recurso não encontrado
 
     delete:
       summary: Remover um produto
@@ -399,12 +516,8 @@ paths:
             type: string
             format: uuid
       responses:
-        '201':
-          description: Produto inserido com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductResponse'
+        '204':
+          description: Remoção feita com sucesso
         '400':
           description: Dados inválidos
           content:
@@ -413,10 +526,8 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Recurso não encontrado
 
   /kingdoms:
     post:
@@ -449,10 +560,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
     get:
       summary: Buscar os reinos
@@ -472,12 +579,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/KingdomResponse'
-        '500':
-          description: Erro interno ao listar reinos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   /kingdoms/{uuid}:
     get:
@@ -505,13 +606,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/KingdomResponse'
         '404':
-          description: Reino não encontrado
-        '500':
-          description: Erro interno ao listar reinos
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Recurso não encontrado
 
     put:
       summary: Atualizar um reino
@@ -537,8 +632,8 @@ paths:
             schema:
               $ref: '#/components/schemas/KingdomRequest'
       responses:
-        '201':
-          description: Reino atualizado com sucesso
+        '200':
+          description: Atualizado com sucesso
           content:
             application/json:
               schema:
@@ -551,12 +646,8 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Reino não encontrado
+          description: Recurso não encontrado
 
     delete:
       summary: Remover um reino
@@ -576,12 +667,8 @@ paths:
             type: string
             format: uuid
       responses:
-        '201':
-          description: Reino inserido com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KingdomResponse'
+        '204':
+          description: Remoção feita com sucesso
         '400':
           description: Dados inválidos
           content:
@@ -590,10 +677,159 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Não autorizado
+        '404':
+          description: Recurso não encontrado
+
+  /transactions:
+    post:
+      summary: Criar uma nova transação
+      description: Cria uma nova transação na base de dados
+      operationId: createTransaction
+      tags:
+        - Transações
+      security:
+        - OAuth2:
+            - write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '201':
+          description: Transação inserida com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Dados inválidos
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+
+    get:
+      summary: Buscar as transações
+      description: Lista as transações baseada nos filtros informados
+      operationId: searchTransactions
+      tags:
+        - Transações
+      security:
+        - OAuth2:
+            - read
+      responses:
+        '200':
+          description: Lista de transações retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+
+  /transactions/{uuid}:
+    get:
+      summary: Buscar uma transação
+      description: Busca uma transação pelo ID informado
+      operationId: findTransactionById
+      tags:
+        - Transações
+      security:
+        - OAuth2:
+            - read
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da transação
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Transação encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          description: Recurso não encontrado
+
+    put:
+      summary: Atualizar uma transação
+      description: Atualiza todos os dados de uma transação pelo ID
+      operationId: updateTransaction
+      tags:
+        - Transações
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da transação
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+        '404':
+          description: Recurso não encontrado
+
+    delete:
+      summary: Remover um transação
+      description: Remove um transação pelo ID informado
+      operationId: removeTransaction
+      tags:
+        - Transações
+      security:
+        - OAuth2:
+            - write
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID da transação
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Remoção feita com sucesso
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autorizado
+        '404':
+          description: Recurso não encontrado
 
 components:
   schemas:
@@ -605,6 +841,26 @@ components:
           description: Nome da moeda
       required:
         - name
+
+    ExchangeRateRequest:
+      type: object
+      properties:
+        idCoinTo:
+          type: string
+          format: uuid
+          description: ID da moeda de destino
+        idCoinFrom:
+          type: string
+          format: uuid
+          description: ID da moeda de origem
+        vlRate:
+          type: number
+          minimum: 0.01
+          description: Uma moeda de origem valem X moedas de destino
+      required:
+        - idCoinTo
+        - idCoinFrom
+        - vlRate
 
     KingdomRequest:
       type: object
@@ -624,6 +880,7 @@ components:
         vlUnit:
           type: number
           minimum: 0.01
+          description: Valor unitário na moeda especificada
         idKingdom:
           type: string
           format: uuid
@@ -638,6 +895,26 @@ components:
         - idKingdom
         - idCoinBase
 
+    TransactionRequest:
+      type: object
+      properties:
+        quantity:
+          type: number
+          minimum: 1
+          description: Quantidade de produtos comprados
+        idProduct:
+          type: string
+          format: uuid
+          description: ID do produto comprado
+        idCoinUsed:
+          type: string
+          format: uuid
+          description: ID da moeda usada no pagamento
+      required:
+        - qtBuyed
+        - idProduct
+        - idCoinUsed
+
     CoinResponse:
       type: object
       properties:
@@ -648,6 +925,22 @@ components:
         name:
           type: string
           description: Nome da moeda
+
+    ExchangeRateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID da taxa de câmbio
+        vlRate:
+          type: number
+          minimum: 0.01
+          description: Uma moeda de origem valem X moedas de destino
+        coinTo:
+          $ref: '#/components/schemas/CoinResponse'
+        coinFrom:
+          $ref: '#/components/schemas/CoinResponse'
 
     KingdomResponse:
       type: object
@@ -676,6 +969,32 @@ components:
         kingdom:
           $ref: '#/components/schemas/KingdomResponse'
         coinBase:
+          $ref: '#/components/schemas/CoinResponse'
+
+    TransactionResponse:
+      type: object
+      properties:
+        vlUnit:
+          type: number
+          minimum: 0.01
+          description: Valor do produto no momento da transação
+        vlRate:
+          type: number
+          minimum: 0.01
+          description: Valor de câmbio utilizado na transação
+        quantity:
+          type: number
+          minimum: 1
+          description: Quantidade de produtos comprados
+        vlConverted:
+          type: number
+          minimum: 0.01
+          description: Valor pago após a conversão
+        product:
+          $ref: '#/components/schemas/ProductResponse'
+        coinUsed:
+          $ref: '#/components/schemas/CoinResponse'
+        coinRequested:
           $ref: '#/components/schemas/CoinResponse'
 
     ErrorResponse:

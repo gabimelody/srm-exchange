@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CoinRepresentationMapper {
 
-    CoinResponseRepresentation toRepresentation(CoinOutbound coinOutbound);
-    CoinInbound toInbound(CoinRequestRepresentation coinRequestRepresentation);
+    CoinInbound toInbound(CoinRequestRepresentation representation);
+    CoinResponseRepresentation toRepresentation(CoinOutbound outbound);
 
 }

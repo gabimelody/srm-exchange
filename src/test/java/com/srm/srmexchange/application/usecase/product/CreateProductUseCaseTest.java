@@ -108,9 +108,9 @@ public class CreateProductUseCaseTest {
     ProductEntity getProductEntity(ProductInbound inbound) {
         return ProductEntity.builder()
                 .name(inbound.getName())
-                .vlUnit(BigDecimal.ONE)
-                .kingdom(getKingdomEntity(inbound))
+                .vlUnit(inbound.getVlUnit())
                 .coinBase(getCoinEntity(inbound))
+                .kingdom(getKingdomEntity(inbound))
                 .build();
     }
 

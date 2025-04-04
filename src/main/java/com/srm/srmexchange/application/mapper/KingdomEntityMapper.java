@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface KingdomEntityMapper {
 
-    KingdomEntity toEntity(KingdomInbound kingdomInbound);
-    KingdomOutbound toOutbound(KingdomEntity kingdomEntity);
+    KingdomEntity toEntity(KingdomInbound inbound);
+    KingdomOutbound toOutbound(KingdomEntity entity);
 
 }

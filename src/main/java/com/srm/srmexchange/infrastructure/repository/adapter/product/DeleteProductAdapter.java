@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeleteProductAdapter implements DeleteProductPort {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
     @Override
     public void execute(ProductEntity entity) {
-        log.info("Deleting product: {}", entity);
-        productRepository.delete(entity);
+        log.info("Deleting entity: {}", entity);
+        repository.delete(entity);
+        log.debug("Entity deleted");
     }
 
 }

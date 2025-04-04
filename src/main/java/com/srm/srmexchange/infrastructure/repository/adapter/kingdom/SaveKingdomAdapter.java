@@ -12,12 +12,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SaveKingdomAdapter implements SaveKingdomPort {
 
-    private final KingdomRepository kingdomRepository;
+    private final KingdomRepository repository;
 
     @Override
     public KingdomEntity execute(KingdomEntity entity) {
-        log.info("Creating kingdom: {}", entity);
-        return kingdomRepository.save(entity);
+        log.info("Creating entity: {}", entity);
+        entity = repository.save(entity);
+        log.info("Entity created: {}", entity);
+
+        return entity;
     }
 
 }

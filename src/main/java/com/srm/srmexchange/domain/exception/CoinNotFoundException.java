@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 public class CoinNotFoundException extends BusinessException {
 
     public CoinNotFoundException() {
-        super(ErrorCodeEnum.PRO001);
+        super(ErrorCodeEnum.COI001);
     }
 
 }

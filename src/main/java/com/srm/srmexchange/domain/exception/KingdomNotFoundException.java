@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 public class KingdomNotFoundException extends BusinessException {
 
     public KingdomNotFoundException() {
-        super(ErrorCodeEnum.PRO002);
+        super(ErrorCodeEnum.KIN001);
     }
 
 }

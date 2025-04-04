@@ -2,9 +2,7 @@ package com.srm.srmexchange.infrastructure.controller.exception;
 
 import com.srm.representation.ErrorResponseRepresentation;
 import com.srm.srmexchange.domain.constants.ErrorCodeEnum;
-import com.srm.srmexchange.domain.exception.BusinessException;
-import com.srm.srmexchange.domain.exception.KingdomNotFoundException;
-import com.srm.srmexchange.domain.exception.ResourceNotFoundException;
+import com.srm.srmexchange.domain.exception.*;
 import com.srm.srmexchange.infrastructure.controller.mapper.ErrorRepresentationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +26,9 @@ public class ControlExceptionHandler {
 
     // Errors 4XX
     @ExceptionHandler({
+            CoinNotFoundException.class,
             KingdomNotFoundException.class,
-    })
+            CoinsAreTheSameException.class})
     public ResponseEntity<Object> handleBadRequest(BusinessException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(errorRepresentationMapper.toRepresentation(exception));
@@ -56,6 +55,12 @@ public class ControlExceptionHandler {
     @ExceptionHandler({ ResourceNotFoundException.class })
     public ResponseEntity<Object> handleNotFound(BusinessException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorRepresentationMapper.toRepresentation(exception));
+    }
+
+    @ExceptionHandler({ExchangeRateAlreadyExistException.class})
+    public ResponseEntity<Object> handleConflict(BusinessException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(errorRepresentationMapper.toRepresentation(exception));
     }
 

@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface KingdomRepresentationMapper {
 
-    KingdomResponseRepresentation toRepresentation(KingdomOutbound kingdomOutbound);
-    KingdomInbound toInbound(KingdomRequestRepresentation kingdomRequestRepresentation);
+    KingdomInbound toInbound(KingdomRequestRepresentation representation);
+    KingdomResponseRepresentation toRepresentation(KingdomOutbound outbound);
 
 }

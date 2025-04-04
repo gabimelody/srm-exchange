@@ -78,7 +78,7 @@ public class ProductController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<ProductResponseRepresentation> removeProduct(UUID uuid) {
+    public ResponseEntity<Void> removeProduct(UUID uuid) {
         log.info("Received request to remove product uuid: {}", uuid);
         if (!removeProductPort.execute(uuid)) {
             throw new ResourceNotFoundException();

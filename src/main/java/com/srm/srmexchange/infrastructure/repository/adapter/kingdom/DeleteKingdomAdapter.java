@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeleteKingdomAdapter implements DeleteKingdomPort {
 
-    private final KingdomRepository kingdomRepository;
+    private final KingdomRepository repository;
 
     @Override
     public void execute(KingdomEntity entity) {
-        log.info("Deleting kingdom: {}", entity);
-        kingdomRepository.delete(entity);
+        log.info("Deleting entity: {}", entity);
+        repository.delete(entity);
+        log.debug("Entity deleted");
     }
 
 }
